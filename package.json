@@ -6,6 +6,7 @@
   "bin": {
     "kingdis": "./bin/run"
   },
+  "main": "src/index.js",
   "scripts": {
     "postpack": "rimraf oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",
@@ -14,8 +15,12 @@
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
   },
-  "bugs": {
-    "url": "https://github.com/Eomm/kingdis/issues"
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "kingdis",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
   },
   "dependencies": {
     "@oclif/command": "^1.5.18",
@@ -45,16 +50,11 @@
     "utility"
   ],
   "license": "MIT",
-  "main": "src/index.js",
-  "oclif": {
-    "commands": "./src/commands",
-    "bin": "kingdis",
-    "plugins": [
-      "@oclif/plugin-help"
-    ]
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Eomm/kingdis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eomm/kingdis/issues"
   }
 }
