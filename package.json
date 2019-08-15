@@ -19,13 +19,17 @@
     "commands": "./src/commands",
     "bin": "kingdis",
     "plugins": [
-      "@oclif/plugin-help"
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
     ]
   },
   "dependencies": {
     "@oclif/command": "^1.5.18",
     "@oclif/config": "^1.13.2",
-    "@oclif/plugin-help": "^2.2.1"
+    "@oclif/plugin-help": "^2.2.1",
+    "@oclif/plugin-not-found": "^1.2.2",
+    "cli-ux": "^5.3.1",
+    "ioredis": "^4.14.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",
