@@ -1,9 +1,10 @@
 'use strict'
 
+const { once } = require('events')
+
 const { Command, flags } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
-
-const { once, EventEmitter } = require('events')
+const { cli } = require('cli-ux')
 
 const Redis = require('ioredis')
 
@@ -16,14 +17,6 @@ class RedisCommand extends Command {
     if (flags.url) {
       redis = new Redis(flags.url)
     } else {
-      console.log({
-        host: flags.host,
-        port: flags.port,
-        password: flags.password,
-        db: flags.db,
-        lazyConnect: true
-      })
-
       redis = new Redis({
         host: flags.host,
         port: flags.port,

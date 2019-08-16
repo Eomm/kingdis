@@ -1,12 +1,10 @@
 'use strict'
-const { createWriteStream } = require('fs')
-const { join } = require('path')
+
 const os = require('os')
+const { join } = require('path')
+const { createWriteStream } = require('fs')
 
 const { flags } = require('@oclif/command')
-const { CLIError } = require('@oclif/errors')
-const { cli } = require('cli-ux')
-
 const { speedBeat } = require('speed-beat')
 
 const RedisCommand = require('../redis-command')
@@ -54,7 +52,7 @@ Subscribe.flags = {
   ...RedisCommand.flags,
   channel: flags.string({
     char: 'c',
-    description: 'channel(s) to subscribe',
+    description: 'the channel(s) to subscribe',
     required: true,
     multiple: true
   }),
@@ -70,11 +68,11 @@ Subscribe.flags = {
   }),
   pick: flags.string({
     char: 'n',
-    description: 'print the message payload every <pick> message received. 0 to turn off',
+    description: 'print the message payload every <pick> messages received. 0 to turn off',
     default: '0'
   })
 }
-Subscribe.description = 'Subscribe to a redis channel and look inside of it'
+Subscribe.description = 'subscribe to a redis channel and look inside of it'
 Subscribe.aliases = ['sub']
 Subscribe.usage = 'subscribe -c one -c two'
 Subscribe.examples = [
