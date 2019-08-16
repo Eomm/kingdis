@@ -4,7 +4,7 @@ const { once } = require('events')
 
 const { Command, flags } = require('@oclif/command')
 const { CLIError } = require('@oclif/errors')
-const { cli } = require('cli-ux')
+const { action } = require('cli-ux').cli
 
 const Redis = require('ioredis')
 
@@ -33,6 +33,7 @@ class RedisCommand extends Command {
         process.once('SIGINT', quit)
       })
 
+      action.start('connecting..')
       const connecting = redis.connect()
 
       if (once) {
@@ -47,8 +48,8 @@ class RedisCommand extends Command {
         await connecting
       }
 
-      this.log('Connected to redis')
       this.redis = redis
+      action.stop('connected')
     } catch (error) {
       throw new CLIError(`failed to connect: ${error.message}`)
     }
