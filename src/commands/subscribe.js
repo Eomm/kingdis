@@ -61,15 +61,15 @@ Subscribe.flags = {
     description: 'append the messages received to the file in cwd: %{ISO date}-%{channel name}.bak',
     default: false
   }),
-  interval: flags.string({
+  interval: flags.integer({
     char: 'i',
     description: 'show how many messages a channel received in <interval> time',
     default: 1000
   }),
-  pick: flags.string({
+  pick: flags.integer({
     char: 'n',
     description: 'print the message payload every <pick> messages received. 0 to turn off',
-    default: '0'
+    default: 0
   })
 }
 Subscribe.description = 'subscribe to a redis channel and look inside of it'

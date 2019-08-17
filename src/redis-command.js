@@ -8,8 +8,13 @@ const { action } = require('cli-ux').cli
 
 const Redis = require('ioredis')
 
+const plotter = require('./plotter')
+
 class RedisCommand extends Command {
   async init () {
+    const ee = plotter(this.log)
+    this.log = ee.emit.bind(ee, 'print')
+
     const { flags } = this.parse(this.constructor)
     this.flags = flags
 
@@ -84,11 +89,11 @@ RedisCommand.flags = {
     default: '127.0.0.1',
     exclusive: ['url']
   }),
-  port: flags.string({
+  port: flags.integer({
     char: 'p',
     description: 'redis port',
     env: 'REDIS_PORT',
-    default: '6379',
+    default: 6379,
     exclusive: ['url']
   }),
   password: flags.string({
@@ -98,11 +103,11 @@ RedisCommand.flags = {
     dependsOn: ['host'],
     exclusive: ['url']
   }),
-  db: flags.string({
+  db: flags.integer({
     char: 'd',
     description: 'redis db',
     env: 'REDIS_DB',
-    default: '0',
+    default: 0,
     dependsOn: ['host'],
     exclusive: ['url']
   })

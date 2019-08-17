@@ -39,10 +39,10 @@ Publish.flags = {
     description: 'the file to publish. Each line will be a message',
     required: true
   }),
-  pick: flags.string({
+  pick: flags.integer({
     char: 'n',
     description: 'print the message payload every <pick> messages published. 0 to turn off',
-    default: '0'
+    default: 0
   })
 }
 Publish.description = `publish to a redis channel a message-file

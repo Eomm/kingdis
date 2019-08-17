@@ -13,7 +13,7 @@
     "lint": "standard",
     "lint:fix": "standard --fix",
     "test": "echo NO TESTS",
-    "version": "oclif-dev readme && git add README.md"
+    "readme": "oclif-dev readme"
   },
   "oclif": {
     "commands": "./src/commands",
@@ -36,7 +36,8 @@
     "@oclif/dev-cli": "^1.22.2",
     "globby": "^10.0.1",
     "rimraf": "^2.7.1",
-    "standard": "^13.1.0"
+    "standard": "^13.1.0",
+    "tap": "^14.6.1"
   },
   "engines": {
     "node": ">=8.0.0"

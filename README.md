@@ -29,27 +29,9 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`kingdis hello`](#kingdis-hello)
 * [`kingdis help [COMMAND]`](#kingdis-help-command)
-* [`kingdis mycommand --myflag`](#kingdis-mycommand---myflag)
-
-## `kingdis hello`
-
-Describe the command here
-
-```
-USAGE
-  $ kingdis hello
-
-OPTIONS
-  -n, --name=name  name to print
-
-DESCRIPTION
-  ...
-  Extra documentation goes here
-```
-
-_See code: [src\commands\hello.js](https://github.com/Eomm/kingdis/blob/v0.0.1/src\commands\hello.js)_
+* [`kingdis publish -c one -c two`](#kingdis-publish--c-one--c-two)
+* [`kingdis subscribe -c one -c two`](#kingdis-subscribe--c-one--c-two)
 
 ## `kingdis help [COMMAND]`
 
@@ -68,20 +50,67 @@ OPTIONS
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src\commands\help.ts)_
 
-## `kingdis mycommand --myflag`
+## `kingdis publish -c one -c two`
 
-description of this example command
+publish to a redis channel a message-file
 
 ```
 USAGE
-  $ kingdis mycommand --myflag
+  $ kingdis publish -c one -c two
+
+OPTIONS
+  -H, --host=host          [default: 127.0.0.1] redis host
+  -c, --channel=channel    (required) the channel(s) where to publish the messages
+  -d, --db=db              [default: 0] redis db
+  -f, --file=file          (required) the file to publish. Each line will be a message
+  -n, --pick=pick          [default: 0] print the message payload every <pick> messages published. 0 to turn off
+  -p, --port=port          [default: 6379] redis port
+  -u, --url=url            redis:// URL connection
+  -w, --password=password  redis auth password
+
+DESCRIPTION
+  ...
+  Extra documentation goes here
+
+ALIASES
+  $ kingdis pub
+
+EXAMPLES
+  Show the payload every 10 message received:
+    $ subscribe -H 192.169.99.100 -p 6970 --pick 10 -c my-channel
+  Show how many messages are published by redis in 10 seconds:
+    $ subscribe -c my-channel --interval 10000
+```
+
+_See code: [src\commands\publish.js](https://github.com/Eomm/kingdis/blob/v0.0.1/src\commands\publish.js)_
+
+## `kingdis subscribe -c one -c two`
+
+subscribe to a redis channel and look inside of it
+
+```
+USAGE
+  $ kingdis subscribe -c one -c two
+
+OPTIONS
+  -H, --host=host          [default: 127.0.0.1] redis host
+  -c, --channel=channel    (required) the channel(s) to subscribe
+  -d, --db=db              [default: 0] redis db
+  -i, --interval=interval  [default: 1000] show how many messages a channel received in <interval> time
+  -n, --pick=pick          [default: 0] print the message payload every <pick> messages received. 0 to turn off
+  -p, --port=port          [default: 6379] redis port
+  -s, --save               append the messages received to the file in cwd: %{ISO date}-%{channel name}.bak
+  -u, --url=url            redis:// URL connection
+  -w, --password=password  redis auth password
 
 ALIASES
   $ kingdis sub
 
 EXAMPLES
-  $ mycommand --force
-  $ mycommand --help
+  Show the payload every 10 message received:
+    $ subscribe -H 192.169.99.100 -p 6970 --pick 10 -c my-channel
+  Show how many messages are published by redis in 10 seconds:
+    $ subscribe -c my-channel --interval 10000
 ```
 
 _See code: [src\commands\subscribe.js](https://github.com/Eomm/kingdis/blob/v0.0.1/src\commands\subscribe.js)_
