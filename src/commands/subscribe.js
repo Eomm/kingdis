@@ -29,6 +29,7 @@ class Subscribe extends RedisCommand {
         const channelSaveStream = createWriteStream(fileName, { flags: 'a' })
         this.redis.on('end', () => { channelSaveStream.end() })
         channelFileStreamMap.set(channel, channelSaveStream)
+        this.log(`Saving messages to ${fileName}`)
       }
     })
 

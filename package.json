@@ -12,7 +12,7 @@
     "prepack": "oclif-dev manifest && oclif-dev readme",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "tap --cov test/**/*.test.js",
+    "test": "tap --cov -j1 test/**/*.test.js",
     "readme": "oclif-dev readme"
   },
   "oclif": {
