@@ -1,17 +1,37 @@
 'use strict'
 
-const { test } = require('tap')
-const { buildCommand } = require('../helper')
 const fs = require('fs')
 
-test('subscribe and save the messages', t => {
-  t.plan(4)
+const t = require('tap')
+const Redis = require('ioredis')
+
+const { buildCommand } = require('../helper')
+
+t.beforeEach((done, t) => {
+  const redis = new Redis({ lazyConnect: true })
+  redis.connect()
+    .then(() => {
+      t.context.redis = redis
+      done()
+    })
+})
+
+t.afterEach((done, t) => {
+  t.context.redis.quit()
+  done()
+})
+
+t.test('subscribe and save the messages', t => {
+  t.plan(6)
 
   const messages = [
     'Subscribed to 1 channels',
     /^Saving messages to*/gi,
-    'Channel file received 0 of 0 msg in 1 sec'
+    'Message on channel file, payload: this is a message',
+    'Channel file received 1 of 1 msg in 1 sec',
+    'Channel file received 0 of 1 msg in 1 sec'
   ]
+  const allMsg = messages.length
 
   let savedFile
   const command = buildCommand((msg) => {
@@ -19,6 +39,10 @@ test('subscribe and save the messages', t => {
       process.emit('SIGINT')
       t.equals(fs.existsSync(savedFile), true)
       return
+    }
+
+    if (messages.length === allMsg) {
+      t.context.redis.publish('file', 'this is a message')
     }
 
     const val = messages.shift()
@@ -30,5 +54,5 @@ test('subscribe and save the messages', t => {
     }
   })
 
-  command.run(['sub', '-c', 'file', '-s']).catch(console.log)
+  command.run(['sub', '-c', 'file', '-s', '-n', '1']).catch(console.log)
 })

@@ -8,11 +8,12 @@
   },
   "main": "src/index.js",
   "scripts": {
-    "postpack": "rimraf oclif.manifest.json",
     "prepack": "oclif-dev manifest && oclif-dev readme",
+    "postpack": "rimraf oclif.manifest.json",
     "lint": "standard",
     "lint:fix": "standard --fix",
     "test": "tap --cov -j1 test/**/*.test.js",
+    "posttest": "rm *.bak",
     "readme": "oclif-dev readme"
   },
   "oclif": {
@@ -29,8 +30,9 @@
     "@oclif/plugin-help": "^2.2.1",
     "@oclif/plugin-not-found": "^1.2.3",
     "cli-ux": "^5.3.1",
+    "event-stream": "^4.0.1",
     "ioredis": "^4.14.0",
-    "speed-beat": "^1.1.0"
+    "speed-beat": "^1.2.0"
   },
   "devDependencies": {
     "@oclif/dev-cli": "^1.22.2",

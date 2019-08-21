@@ -1,8 +1,7 @@
 'use strict'
 
-const os = require('os')
-const { join } = require('path')
-const { createWriteStream } = require('fs')
+const { createReadStream } = require('fs')
+const es = require('event-stream')
 
 const { flags } = require('@oclif/command')
 
@@ -12,17 +11,44 @@ const RedisCommand = require('../redis-command')
 
 class Publish extends RedisCommand {
   async run () {
-    const channelFileStreamMap = new Map()
-
+    const speed = speedBeat()
     const channels = this.flags.channel
 
-    const speed = speedBeat({ timer: '1s' })
+    // const processor = externalProcessor(args) // TODO
 
-    channels.forEach(async (channel) => {
-      const line = 'demoooo'
-      const listenedFrom = await this.redis.publish(channel, line)
-      this.log('The message %s has been received from %d subscriber', line, listenedFrom)
+    const fileStream = createReadStream(this.flags.file, 'utf8')
+
+    channels.forEach((channel) => {
+      speed.chrono(channel, (id, counter, total, deltaBeat) => {
+        // TODO
+        console.log({ id, counter, total, deltaBeat })
+      })
     })
+
+    const redis = this.redis
+
+    fileStream
+      .pipe(es.split())
+      .pipe(es.map(function (line, cb) {
+        // do something with the line
+        // const line = processor(msg) // TODO
+        const p = channels.map((channel) => {
+          speed.lap(channel)
+          return redis.publish(channel, line)
+        })
+
+        Promise.all(p).then((res) => {
+          console.log({ res })
+          // this.log('The message %s has been received from %d subscriber', line, listenedFrom)
+          cb(null, line)
+        })
+      }))
+      .pipe(es.wait((err, body) => {
+        // have complete text here.
+        this.log('FINISHED')
+        speed.finish()
+        redis.quit()
+      }))
   }
 }
 

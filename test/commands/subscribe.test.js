@@ -13,15 +13,15 @@ test('subscribe help', async t => {
   }
 })
 
-// test('subscribe missing mandatory parameters', async t => {
-//   const exec = Command.run(['sub'])
-//   try {
-//     await exec
-//   } catch (error) {
-//     console.log({ error })
-//     console.log(error.oclif.exit)
-//   }
-// })
+test('subscribe missing mandatory parameters', async t => {
+  t.plan(2)
+  try {
+    await runCommand(['subscribe'])
+  } catch (error) {
+    t.ok(error.oclif)
+    t.equals(error.oclif.exit, 2)
+  }
+})
 
 test('subscribe to a channel', t => {
   t.plan(4)
