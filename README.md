@@ -133,6 +133,11 @@ _See code: [src\commands\subscribe.js](https://github.com/Eomm/kingdis/blob/v0.0
 <!-- commandsstop -->
 
 
+## Why this name?
+
+`redis` starts with `re` that in italian means `king`.. so: `kingdis`!
+
+
 ## License
 
 Copyright [Manuel Spigolon](https://github.com/Eomm), Licensed under [MIT](./LICENSE).
