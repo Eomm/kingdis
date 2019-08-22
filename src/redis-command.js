@@ -36,6 +36,7 @@ class RedisCommand extends Command {
     try {
       redis.on('ready', () => {
         process.once('SIGINT', quit)
+        process.once('SIGBREAK', quit)
       })
 
       action.start('connecting..')
@@ -70,9 +71,11 @@ class RedisCommand extends Command {
   // }
 
   // called after run and catch regardless of whether or not the command errored
-  // async finally (err) {
-  //   console.log('finally - ' + err)
-  // }
+  async finally (err) {
+    if (err) {
+      process.emit('SIGBREAK')
+    }
+  }
 }
 
 RedisCommand.flags = {

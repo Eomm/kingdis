@@ -24,15 +24,14 @@ class Publish extends RedisCommand {
 
     channels.forEach((channel) => {
       speed.chrono(channel, (id, counter, total, deltaBeat) => {
-        // TODO
-        console.log({ id, counter, total, deltaBeat })
+        this.log(`Sent ${total} lines to ${id} in ${deltaBeat / 1000} sec`)
       })
       delivery.chrono(channel, (id, counter, total, deltaBeat) => {
-        // TODO
-        console.log({ id, counter, total, deltaBeat })
+        this.log(`${total} subscribers received the messages from ${id} in ${deltaBeat / 1000} sec`)
       })
     })
 
+    this.log(`Publishing ${this.flags.file} file`)
     fileStream
       .pipe(es.split())
       .pipe(es.map((readLine, cb) => {
