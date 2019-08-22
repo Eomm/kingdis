@@ -1,0 +1,71 @@
+{
+  "name": "kingdis",
+  "description": "A CLI utility to work with redis",
+  "version": "0.0.1",
+  "author": "Manuel Spigolon <behemoth89@gmail.com> (https://github.com/Eomm)",
+  "bin": {
+    "kingdis": "./bin/run"
+  },
+  "main": "src/index.js",
+  "scripts": {
+    "prepack": "oclif-dev manifest && oclif-dev readme",
+    "postpack": "rimraf oclif.manifest.json",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
+    "test": "npm run lint && tap --cov -j1 test/**/*.test.js",
+    "posttest": "rm *.bak",
+    "prepublish": "npm run readme",
+    "readme": "oclif-dev readme"
+  },
+  "oclif": {
+    "commands": "./src/commands",
+    "bin": "kingdis",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-not-found"
+    ]
+  },
+  "dependencies": {
+    "@oclif/command": "^1.5.18",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.1",
+    "@oclif/plugin-not-found": "^1.2.3",
+    "cli-ux": "^5.3.1",
+    "event-stream": "^4.0.1",
+    "ioredis": "^4.14.0",
+    "speed-beat": "^1.2.0"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "globby": "^10.0.1",
+    "rimraf": "^2.7.1",
+    "standard": "^13.1.0",
+    "tap": "^14.6.1"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json",
+    "/src"
+  ],
+  "homepage": "https://github.com/Eomm/kingdis",
+  "keywords": [
+    "oclif",
+    "redis",
+    "cli",
+    "utility",
+    "pub/sub",
+    "push/pop"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eomm/kingdis.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Eomm/kingdis/issues"
+  }
+}
