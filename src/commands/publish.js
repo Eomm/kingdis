@@ -95,17 +95,24 @@ Publish.flags = {
     default: 0
   })
 }
-Publish.description = `publish to a redis channel a message-file
+Publish.description = `publish to a redis channel a file
 ...
-Extra documentation goes here
+Each line of the file will be read and submitted as-is in the redis' channels.
+
+Additionally you can transform each line with the line-handler. It must be a JavaScript file
+that export a sync function that receive the string line in input and must return a string:
+
+module.exports = function handler (line) {
+  return JSON.stringify({ line })
+}
 `
 Publish.aliases = ['pub']
-Publish.usage = 'publish -c one -c two'
+Publish.usage = 'publish [OPTIONS]'
 Publish.examples = [
-  'Show the payload every 10 message received:',
-  ' $ subscribe -H 192.169.99.100 -p 6970 --pick 10 -c my-channel',
-  'Show how many messages are published by redis in 10 seconds:',
-  ' $ subscribe -c my-channel --interval 10000'
+  'Publish a file to redis at port 6970:',
+  ' $ publish -p 6970 -c my-channel -f myFile.csv',
+  'Publish a file to multiple redis channels and show the payload that is being processed by the line handler:',
+  ' $ publish -c one -c two --pick 1 -f myFile.csv -l ./script/my-transformation.js'
 ]
 
 module.exports = Publish

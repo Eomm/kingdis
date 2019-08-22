@@ -75,12 +75,14 @@ Subscribe.flags = {
 }
 Subscribe.description = 'subscribe to a redis channel and look inside of it'
 Subscribe.aliases = ['sub']
-Subscribe.usage = 'subscribe -c one -c two'
+Subscribe.usage = 'subscribe [OPTIONS]'
 Subscribe.examples = [
   'Show the payload every 10 message received:',
   ' $ subscribe -H 192.169.99.100 -p 6970 --pick 10 -c my-channel',
   'Show how many messages are published by redis in 10 seconds:',
-  ' $ subscribe -c my-channel --interval 10000'
+  ' $ subscribe -c my-channel --interval 10000',
+  'Save all the messages to a file:',
+  ' $ subscribe -c my-channel --save'
 ]
 
 module.exports = Subscribe
