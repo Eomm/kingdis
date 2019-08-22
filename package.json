@@ -1,7 +1,7 @@
 {
   "name": "kingdis",
   "description": "A CLI utility to work with redis",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "Manuel Spigolon <behemoth89@gmail.com> (https://github.com/Eomm)",
   "bin": {
     "kingdis": "./bin/run"
