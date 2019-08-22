@@ -8,14 +8,18 @@ const { flags } = require('@oclif/command')
 const { speedBeat } = require('speed-beat')
 
 const RedisCommand = require('../redis-command')
+const lineHandler = require('../line-handler')
 
 class Publish extends RedisCommand {
   async run () {
+    let publishedLines = 0
     const speed = speedBeat()
+    const delivery = speedBeat()
+
+    const redis = this.redis
     const channels = this.flags.channel
-
-    // const processor = externalProcessor(args) // TODO
-
+    const pick = +this.flags.pick
+    const transformation = lineHandler(this.flags['line-handler'])
     const fileStream = createReadStream(this.flags.file, 'utf8')
 
     channels.forEach((channel) => {
@@ -23,30 +27,47 @@ class Publish extends RedisCommand {
         // TODO
         console.log({ id, counter, total, deltaBeat })
       })
+      delivery.chrono(channel, (id, counter, total, deltaBeat) => {
+        // TODO
+        console.log({ id, counter, total, deltaBeat })
+      })
     })
-
-    const redis = this.redis
 
     fileStream
       .pipe(es.split())
-      .pipe(es.map(function (line, cb) {
-        // do something with the line
-        // const line = processor(msg) // TODO
+      .pipe(es.map((readLine, cb) => {
+        const line = transformation(readLine)
+
         const p = channels.map((channel) => {
-          speed.lap(channel)
           return redis.publish(channel, line)
+            .catch(() => 0)
+            .then(listener => ({ channel, listener }))
         })
 
-        Promise.all(p).then((res) => {
-          console.log({ res })
-          // this.log('The message %s has been received from %d subscriber', line, listenedFrom)
-          cb(null, line)
-        })
+        Promise.all(p)
+          .then(published => {
+            published.forEach(({ channel, listener }) => {
+              speed.lap(channel)
+              delivery.lap(channel, listener)
+            })
+
+            publishedLines++
+
+            if (pick > 0 && (publishedLines % pick) === 0) {
+              this.log(`Published line ${publishedLines} on channels [${channels}], payload: ${line}`)
+            }
+
+            cb(null, line)
+          })
       }))
-      .pipe(es.wait((err, body) => {
-        // have complete text here.
-        this.log('FINISHED')
+      .pipe(es.wait((err) => {
+        if (err) {
+          this.warn(err)
+        }
+
         speed.finish()
+        delivery.finish()
+        this.log(`Published ${publishedLines} lines`)
         redis.quit()
       }))
   }
@@ -64,6 +85,10 @@ Publish.flags = {
     char: 'f',
     description: 'the file to publish. Each line will be a message',
     required: true
+  }),
+  'line-handler': flags.string({
+    char: 'l',
+    description: 'a js file that must export a map function that receive a line in input and return a string'
   }),
   pick: flags.integer({
     char: 'n',
