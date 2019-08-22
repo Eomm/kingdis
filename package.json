@@ -12,8 +12,9 @@
     "postpack": "rimraf oclif.manifest.json",
     "lint": "standard",
     "lint:fix": "standard --fix",
-    "test": "tap --cov -j1 test/**/*.test.js",
+    "test": "npm run lint && tap --cov -j1 test/**/*.test.js",
     "posttest": "rm *.bak",
+    "prepublish": "npm run readme",
     "readme": "oclif-dev readme"
   },
   "oclif": {

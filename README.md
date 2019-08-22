@@ -5,6 +5,7 @@ A CLI utility to work with redis
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/kingdis.svg)](https://npmjs.org/package/kingdis)
+[![Build Status](https://travis-ci.com/Eomm/kingdis.svg?branch=master)](https://travis-ci.com/Eomm/kingdis)
 [![Downloads/week](https://img.shields.io/npm/dw/kingdis.svg)](https://npmjs.org/package/kingdis)
 [![License](https://img.shields.io/npm/l/kingdis.svg)](https://github.com/Eomm/kingdis/blob/master/package.json)
 
