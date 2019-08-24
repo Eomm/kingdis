@@ -109,7 +109,7 @@ Push.examples = [
   'Push a file with LPUSH to redis:',
   ' $ push -S left -L my-list -f myFile.csv',
   'Push a file and show the payload that is being processed by the line handler:',
-  ' $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js'
+  ' $ push -f myFile.csv -L my-list --pick 1 -l ./script/my-transformation.js'
 ]
 
 module.exports = Push

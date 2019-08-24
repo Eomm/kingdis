@@ -23,7 +23,7 @@ RPush.examples = [
   'RPUSH a file to redis at port 6970:',
   ' $ rpush -p 6970 -L my-list -f myFile.csv',
   'RPUSH a file and show the payload that is being processed by the line handler:',
-  ' $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js'
+  ' $ rpush -f myFile.csv -L my-list --pick 1 -l ./script/my-transformation.js'
 ]
 
 module.exports = RPush
