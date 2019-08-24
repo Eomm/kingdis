@@ -11,10 +11,20 @@ const RedisCommand = require('../redis-command')
 const lineHandler = require('../line-handler')
 
 class Push extends RedisCommand {
+  async init () {
+    await super.init()
+    this.selectSide()
+  }
+
+  selectSide () {
+    this.pushFn = this.flags.side === 'right'
+      ? this.redis.rpush.bind(this.redis)
+      : this.redis.lpush.bind(this.redis)
+  }
+
   async run () {
     const speed = speedBeat()
 
-    const redis = this.redis
     const list = this.flags.list
     const pick = +this.flags.pick
     const transformation = lineHandler(this.flags['line-handler'])
@@ -24,13 +34,13 @@ class Push extends RedisCommand {
       this.log(`Pushed ${counter} lines to ${id} in ${deltaBeat / 1000} sec`)
     })
 
-    this.log(`Pushing ${this.flags.file} file`)
+    this.log(`Pushing to ${this.flags.side} the ${this.flags.file} file`)
     fileStream
       .pipe(es.split())
       .pipe(es.map((readLine, cb) => {
         const line = transformation(readLine)
 
-        redis.rpush(list, line)
+        this.pushFn(list, line)
           .then(lengthListAfterPush => {
             const status = speed.lap(list)
 
@@ -48,7 +58,7 @@ class Push extends RedisCommand {
         }
 
         speed.finish()
-        redis.quit()
+        this.redis.quit()
       }))
   }
 }
@@ -64,6 +74,12 @@ Push.flags = {
     char: 'f',
     description: 'the file to push. Each line will be a message',
     required: true
+  }),
+  side: flags.string({
+    char: 'S',
+    description: 'the list side where push. Will direct RPUSH or LPUSH',
+    options: ['right', 'left'],
+    default: 'right'
   }),
   'line-handler': flags.string({
     char: 'l',
@@ -90,6 +106,8 @@ Push.usage = 'push [OPTIONS]'
 Push.examples = [
   'Push a file to redis at port 6970:',
   ' $ push -p 6970 -L my-list -f myFile.csv',
+  'Push a file with LPUSH to redis:',
+  ' $ push -S left -L my-list -f myFile.csv',
   'Push a file and show the payload that is being processed by the line handler:',
   ' $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js'
 ]
