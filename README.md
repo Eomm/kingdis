@@ -20,7 +20,7 @@ $ npm install -g kingdis
 $ kingdis COMMAND
 running command...
 $ kingdis (-v|--version|version)
-kingdis/0.0.1 win32-x64 node-v10.11.0
+kingdis/0.1.0 win32-x64 node-v10.11.0
 $ kingdis --help [COMMAND]
 USAGE
   $ kingdis COMMAND
@@ -31,6 +31,7 @@ USAGE
 <!-- commands -->
 * [`kingdis help [COMMAND]`](#kingdis-help-command)
 * [`kingdis publish [OPTIONS]`](#kingdis-publish-options)
+* [`kingdis push [OPTIONS]`](#kingdis-push-options)
 * [`kingdis subscribe [OPTIONS]`](#kingdis-subscribe-options)
 
 ## `kingdis help [COMMAND]`
@@ -96,7 +97,52 @@ EXAMPLES
     $ publish -c one -c two --pick 1 -f myFile.csv -l ./script/my-transformation.js
 ```
 
-_See code: [src\commands\publish.js](https://github.com/Eomm/kingdis/blob/v0.0.1/src\commands\publish.js)_
+_See code: [src\commands\publish.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\publish.js)_
+
+## `kingdis push [OPTIONS]`
+
+push to a redis list from a file
+
+```
+USAGE
+  $ kingdis push [OPTIONS]
+
+OPTIONS
+  -H, --host=host                  [default: 127.0.0.1] redis host
+  -L, --list=list                  (required) the list where push the values
+  -d, --db=db                      redis db
+  -f, --file=file                  (required) the file to push. Each line will be a message
+
+  -l, --line-handler=line-handler  a js file that must export a map function that receive a line in input and return a
+                                   string
+
+  -n, --pick=pick                  print the message payload every <pick> messages pushed. 0 to turn off
+
+  -p, --port=port                  [default: 6379] redis port
+
+  -u, --url=url                    redis:// URL connection
+
+  -w, --password=password          redis auth password
+
+DESCRIPTION
+  ...
+  Each line of the file will be read and pushed as-is in the redis' list.
+
+  Additionally you can transform each line with the line-handler. It must be a JavaScript file
+  that export a sync function that receive the string line in input and must return a string:
+
+  module.exports = function handler (line) {
+     return JSON.stringify({ line })
+  }
+
+EXAMPLES
+  Push a file to redis at port 6970:
+    $ push -p 6970 -L my-list -f myFile.csv
+  Push a file and show the payload that is being processed by the line handler:
+    $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js
+```
+
+_See code: [src\commands\push.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\push.js)_
 
 ## `kingdis subscribe [OPTIONS]`
 
@@ -129,7 +175,7 @@ EXAMPLES
     $ subscribe -c my-channel --save
 ```
 
-_See code: [src\commands\subscribe.js](https://github.com/Eomm/kingdis/blob/v0.0.1/src\commands\subscribe.js)_
+_See code: [src\commands\subscribe.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\subscribe.js)_
 <!-- commandsstop -->
 
 
