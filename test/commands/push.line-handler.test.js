@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const { buildCommand } = require('../helper')
+const { buildCommand, cleanTearDown } = require('../helper')
 
 test('push with line handler', t => {
   t.plan(3)
@@ -22,4 +22,5 @@ test('push with line handler', t => {
   })
 
   command.run(['push', '-S', 'left', '-L', 'leftx', '-f', 'test/messages.txt', '-n', '2', '-l', 'test/line-handler.js'])
+  cleanTearDown(t, 'leftx')
 })

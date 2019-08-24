@@ -1,7 +1,7 @@
 'use strict'
 
 const { test } = require('tap')
-const { buildCommand } = require('../helper')
+const { buildCommand, cleanTearDown } = require('../helper')
 
 test('rpush to a list', t => {
   t.plan(2)
@@ -21,4 +21,5 @@ test('rpush to a list', t => {
   })
 
   command.run(['rpush', '-L', 'right:list', '-f', 'test/messages.txt'])
+  cleanTearDown(t, 'right:list')
 })
