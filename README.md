@@ -30,8 +30,10 @@ USAGE
 # Commands
 <!-- commands -->
 * [`kingdis help [COMMAND]`](#kingdis-help-command)
+* [`kingdis rpush [OPTIONS]`](#kingdis-rpush-options)
 * [`kingdis publish [OPTIONS]`](#kingdis-publish-options)
 * [`kingdis push [OPTIONS]`](#kingdis-push-options)
+* [`kingdis rpush [OPTIONS]`](#kingdis-rpush-options-1)
 * [`kingdis subscribe [OPTIONS]`](#kingdis-subscribe-options)
 
 ## `kingdis help [COMMAND]`
@@ -50,6 +52,44 @@ OPTIONS
 ```
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v2.2.1/src\commands\help.ts)_
+
+## `kingdis rpush [OPTIONS]`
+
+lpush to a redis list from a file
+
+```
+USAGE
+  $ kingdis rpush [OPTIONS]
+
+OPTIONS
+  -H, --host=host                  [default: 127.0.0.1] redis host
+  -L, --list=list                  (required) the list where push the values
+  -d, --db=db                      redis db
+  -f, --file=file                  (required) the file to push. Each line will be a message
+
+  -l, --line-handler=line-handler  a js file that must export a map function that receive a line in input and return a
+                                   string
+
+  -n, --pick=pick                  print the message payload every <pick> messages pushed. 0 to turn off
+
+  -p, --port=port                  [default: 6379] redis port
+
+  -u, --url=url                    redis:// URL connection
+
+  -w, --password=password          redis auth password
+
+DESCRIPTION
+  ...
+  checkout push command help for more info
+
+EXAMPLES
+  LPUSH a file to redis at port 6970:
+    $ lpush -p 6970 -L my-list -f myFile.csv
+  LPUSH a file and show the payload that is being processed by the line handler:
+    $ lpush -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js
+```
+
+_See code: [src\commands\lpush.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\lpush.js)_
 
 ## `kingdis publish [OPTIONS]`
 
@@ -110,6 +150,7 @@ USAGE
 OPTIONS
   -H, --host=host                  [default: 127.0.0.1] redis host
   -L, --list=list                  (required) the list where push the values
+  -S, --side=right|left            [default: right] the list side where push. Will direct RPUSH or LPUSH
   -d, --db=db                      redis db
   -f, --file=file                  (required) the file to push. Each line will be a message
 
@@ -138,11 +179,51 @@ DESCRIPTION
 EXAMPLES
   Push a file to redis at port 6970:
     $ push -p 6970 -L my-list -f myFile.csv
+  Push a file with LPUSH to redis:
+    $ push -S left -L my-list -f myFile.csv
   Push a file and show the payload that is being processed by the line handler:
     $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js
 ```
 
 _See code: [src\commands\push.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\push.js)_
+
+## `kingdis rpush [OPTIONS]`
+
+rpush to a redis list from a file
+
+```
+USAGE
+  $ kingdis rpush [OPTIONS]
+
+OPTIONS
+  -H, --host=host                  [default: 127.0.0.1] redis host
+  -L, --list=list                  (required) the list where push the values
+  -d, --db=db                      redis db
+  -f, --file=file                  (required) the file to push. Each line will be a message
+
+  -l, --line-handler=line-handler  a js file that must export a map function that receive a line in input and return a
+                                   string
+
+  -n, --pick=pick                  print the message payload every <pick> messages pushed. 0 to turn off
+
+  -p, --port=port                  [default: 6379] redis port
+
+  -u, --url=url                    redis:// URL connection
+
+  -w, --password=password          redis auth password
+
+DESCRIPTION
+  ...
+  checkout push command help for more info
+
+EXAMPLES
+  RPUSH a file to redis at port 6970:
+    $ rpush -p 6970 -L my-list -f myFile.csv
+  RPUSH a file and show the payload that is being processed by the line handler:
+    $ push -L my-list --pick 1 -f myFile.csv -l ./script/my-transformation.js
+```
+
+_See code: [src\commands\rpush.js](https://github.com/Eomm/kingdis/blob/v0.1.0/src\commands\rpush.js)_
 
 ## `kingdis subscribe [OPTIONS]`
 
